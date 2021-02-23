@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { Form, Row, Col, Input, Button } from "antd";
+import { Row, Col, Input, Checkbox, Button, Image } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const login = () => {
   const { register, handleSubmit } = useForm();
@@ -10,36 +10,56 @@ const login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Row className="form-group">
-        <Col xs={20} sm={4} md={6} lg={8} xl={4}>
-          <label htmlFor="title">Username</label>
-          <input
-            ref={register({ required: true })}
-            name="title"
-            type="text"
-            className="form-control"
-            id="title"
-          />
-        </Col>
+    <div>
+      <Row>
+        <Image
+          width={50}
+          src='https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'
+        />
+        <h1 className='p-0'>Easy Commerce</h1>
       </Row>
 
-      <Row className="form-group">
-        <Col xs={20} sm={4} md={6} lg={8} xl={4}>
-          <label htmlFor="title">Password</label>
-          <input
-            ref={register({ required: true })}
-            name="password"
-            type="password"
-            className="form-control"
-            id="password"
-          />
-        </Col>
-      </Row>
-      <button type="submit" className="btn btn-primary">
-        Login
-      </button>
-    </form>
+      <form onSubmit={handleSubmit(onSubmit)} className='login-warp'>
+        <Row>
+          <Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 2 }}>
+            <Input
+              name='title'
+              type='text'
+              placeholder='admin'
+              className='form-control'
+              id='title'
+              prefix={<UserOutlined />}
+            />
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 2 }}>
+            <Input
+              name='password'
+              type='password'
+              className='form-control'
+              id='password'
+              placeholder='password'
+              prefix={<LockOutlined />}
+            />
+          </Col>
+        </Row>
+
+        <div>
+          <Checkbox
+          // checked={this.state.autoLogin}
+          // onChange={this.changeAutoLogin}
+          >
+            Keep me logged in
+          </Checkbox>
+          <a style={{ float: "right" }} href=''>
+            Forgot password
+          </a>
+        </div>
+        <Button type='primary'>Login</Button>
+      </form>
+    </div>
   );
 };
 
