@@ -12,46 +12,35 @@ const login = () => {
 
   return (
     <div className='d-flex justify-content-center flex-column'>
-      <div className='d-flex justify-content-center flex-column'>
+      <div className='d-flex justify-content-center flex-row mt-5'>
         <Image
           width={50}
           src='https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'
+          className='pr-2'
         />
         <h1 className='p-0 text-color'>Easy Commerce</h1>
       </div>
-      <div>
-        <form onSubmit={handleSubmit(onSubmit)} className='login-warp'>
-          <Row>
-            <Col
-            // xs={{ span: 5, offset: 1 }}
-            // lg={{ span: 6, offset: 2 }}
-            // sm={{ span: 12, offset: 1 }}
-            >
-              <Input
-                name='title'
-                type='text'
-                placeholder='admin'
-                className='form-control'
-                id='title'
-                prefix={<UserOutlined />}
-              />
-            </Col>
-          </Row>
+      <div className='d-flex justify-content-center'>
+        <form onSubmit={handleSubmit(onSubmit)} className='login-warp mt-3'>
+          <Input
+            name='title'
+            type='text'
+            placeholder='admin'
+            className='form-control'
+            id='title'
+            prefix={<UserOutlined />}
+          />
 
-          <Row>
-            <Col xs={{ span: 5, offset: 1 }} lg={{ span: 6, offset: 2 }}>
-              <Input
-                name='password'
-                type='password'
-                className='form-control'
-                id='password'
-                placeholder='password'
-                prefix={<LockOutlined />}
-              />
-            </Col>
-          </Row>
+          <Input
+            name='password'
+            type='password'
+            className='form-control mt-2'
+            id='password'
+            placeholder='password'
+            prefix={<LockOutlined />}
+          />
 
-          <div>
+          <div className='mt-2 mb-3'>
             <Checkbox
             // checked={this.state.autoLogin}
             // onChange={this.changeAutoLogin}
@@ -62,7 +51,9 @@ const login = () => {
               Forgot password
             </a>
           </div>
-          <Button type='primary'>Login</Button>
+          <div className='d-flex justify-content-center'>
+            <Button className='pr-5 pl-5'>Login</Button>
+          </div>
         </form>
       </div>
     </div>
