@@ -2,12 +2,31 @@ import { useForm } from "react-hook-form";
 import { Row, Col, Input, Checkbox, Button, Image } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import "./style.css";
+import { gql, useMutation } from '@apollo/client';
+
+const TOKEN_AUTH = gql`
+mutation tokenAuth($username: String!, $password: String!) {
+  tokenAuth(username: $username, password: $password) {
+    token
+  }
+}
+`;
 
 const login = () => {
   const { register, handleSubmit } = useForm();
+  const [tokenAuth, { data }] = useMutation(TOKEN_AUTH);
+  console.log(data);
 
   const onSubmit = (data) => {
     alert(JSON.stringify(data));
+    tokenAuth({
+      variables: {
+        username: 'admin',
+        password: "1",
+      }
+    }).then((data) => {
+      console.log(data);
+    })
   };
 
   return (
@@ -52,7 +71,7 @@ const login = () => {
             </a>
           </div>
           <div className='d-flex justify-content-center'>
-            <Button className='pr-5 pl-5'>Login</Button>
+            <Button htmlType="submit" className='pr-5 pl-5'>Login</Button>
           </div>
         </form>
       </div>
