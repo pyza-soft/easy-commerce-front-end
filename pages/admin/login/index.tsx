@@ -5,11 +5,11 @@ import "./style.css";
 import { gql, useMutation } from '@apollo/client';
 
 const TOKEN_AUTH = gql`
-mutation tokenAuth($username: String!, $password: String!) {
-  tokenAuth(username: $username, password: $password) {
-    token
+mutation TokenAuth($username: String!, $password: String!) {
+    tokenAuth(username: $username, password: $password) {
+      token
+    }
   }
-}
 `;
 
 const login = () => {
