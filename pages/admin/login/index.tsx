@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
+import styles from "./style.module.css";
 import { Row, Col, Input, Checkbox, Button, Image } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import "./style.css";
-import { gql, useMutation } from '@apollo/client';
+import { gql, useMutation } from "@apollo/client";
 
 const TOKEN_AUTH = gql`
-mutation TokenAuth($username: String!, $password: String!) {
+  mutation TokenAuth($username: String!, $password: String!) {
     tokenAuth(username: $username, password: $password) {
       token
     }
@@ -21,12 +21,12 @@ const login = () => {
     alert(JSON.stringify(data));
     tokenAuth({
       variables: {
-        username: 'admin',
+        username: "admin",
         password: "1",
-      }
+      },
     }).then((data) => {
       console.log(data);
-    })
+    });
   };
 
   return (
@@ -37,7 +37,7 @@ const login = () => {
           src='https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg'
           className='pr-2'
         />
-        <h1 className='p-0 text-color'>Easy Commerce</h1>
+        <h1 className={styles.textcolor}>Easy Commerce</h1>
       </div>
       <div className='d-flex justify-content-center'>
         <form onSubmit={handleSubmit(onSubmit)} className='login-warp mt-3'>
@@ -71,7 +71,9 @@ const login = () => {
             </a>
           </div>
           <div className='d-flex justify-content-center'>
-            <Button htmlType="submit" className='pr-5 pl-5'>Login</Button>
+            <Button htmlType='submit' className='pr-5 pl-5'>
+              Login
+            </Button>
           </div>
         </form>
       </div>
