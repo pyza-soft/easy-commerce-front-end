@@ -1,4 +1,10 @@
 import { Table, Tag, Space } from "antd";
+import dynamic from "next/dynamic";
+import Layout from "../../../Component/layout";
+
+const LayoutComponent = dynamic(
+  () => import("../../../Component/layout/index")
+);
 
 const columns = [
   {
@@ -74,7 +80,14 @@ const data = [
 ];
 
 const brand = () => {
-  return <Table columns={columns} dataSource={data} />;
+  return (
+    // <LayoutComponent>
+    <Layout>
+      <Table columns={columns} dataSource={data} />
+    </Layout>
+
+    // </LayoutComponent>
+  );
 };
 
 export default brand;

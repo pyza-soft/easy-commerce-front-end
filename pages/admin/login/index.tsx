@@ -21,8 +21,8 @@ const login = () => {
     alert(JSON.stringify(data));
     tokenAuth({
       variables: {
-        username: "admin",
-        password: "1",
+        username: "shamee",
+        password: "sh123456",
       },
     }).then((data) => {
       console.log(data);

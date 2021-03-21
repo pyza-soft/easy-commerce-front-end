@@ -1,15 +1,7 @@
 import Image from "next/image";
 import styles from "./style.module.css";
-import { Layout, Menu, Anchor } from "antd";
-// import brand from "../../../Component/Admin/brand";
-
-import dynamic from "next/dynamic";
-
-const DynamicComponent = dynamic(
-  () => import("../../../Component/Admin/brand")
-);
-
-const { Link } = Anchor;
+import { useRouter } from "next/router";
+import { Layout, Menu } from "antd";
 
 import {
   AppstoreOutlined,
@@ -20,11 +12,17 @@ import {
   UserOutlined,
   UploadOutlined,
   VideoCameraOutlined,
+  PropertySafetyFilled,
 } from "@ant-design/icons";
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const Navbar = () => {
+const Navbar = ({ children }) => {
+  const router = useRouter();
+
+  const handleClick = (url) => {
+    router.push(url);
+  };
   return (
     <Layout>
       <Sider
@@ -39,10 +37,19 @@ const Navbar = () => {
         <div className={styles.logo} />
 
         <Menu theme='dark' mode='inline' defaultSelectedKeys={["1"]}>
-          <Menu.Item key='1' icon={<UserOutlined />}>
+          <Menu.Item
+            key='1'
+            icon={<UserOutlined />}
+            onClick={() => handleClick("/admin/brand")}
+          >
             nav 1
           </Menu.Item>
-          <Menu.Item key='2' icon={<VideoCameraOutlined />}>
+
+          <Menu.Item
+            key='2'
+            onClick={() => handleClick("/admin/category")}
+            icon={<VideoCameraOutlined />}
+          >
             nav 2
           </Menu.Item>
           <Menu.Item key='3' icon={<UploadOutlined />}>
@@ -72,7 +79,7 @@ const Navbar = () => {
             className='site-layout-background'
             style={{ padding: 24, textAlign: "center" }}
           >
-            <DynamicComponent />
+            {children}
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
