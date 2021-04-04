@@ -42,7 +42,7 @@ const Navbar = ({ children }) => {
             icon={<UserOutlined />}
             onClick={() => handleClick("/admin/brand")}
           >
-            nav 1
+            Brand
           </Menu.Item>
 
           <Menu.Item
@@ -50,7 +50,7 @@ const Navbar = ({ children }) => {
             onClick={() => handleClick("/admin/category")}
             icon={<VideoCameraOutlined />}
           >
-            nav 2
+            Category
           </Menu.Item>
           <Menu.Item key='3' icon={<UploadOutlined />}>
             nav 3
