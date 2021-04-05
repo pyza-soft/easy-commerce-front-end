@@ -7,7 +7,7 @@ import BrandAddModal from "../../../Component/Admin/Modal/BrandAddModal";
 import { useQuery, gql } from "@apollo/client";
 import { LOAD_BRAND } from "../../../GraphQL/queries";
 
-const brand = () => {
+const Brand = () => {
   const { error, loading, data } = useQuery(LOAD_BRAND);
   const [brands, setBrands] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -37,6 +37,7 @@ const brand = () => {
     {
       title: "Action",
       key: "action",
+      className: "text-center",
       render: (text, record) => (
         <Space size='middle'>
           {/* <Button
@@ -65,14 +66,15 @@ const brand = () => {
   columns;
   return (
     <React.Fragment>
-      <Button
-        onClick={() => {
-          setIsModalVisible(true);
-        }}
-      >
-        Add Brands
-      </Button>
       <Layout>
+        <Button
+          onClick={() => {
+            setIsModalVisible(true);
+          }}
+          className='mb-2'
+        >
+          Add Brand
+        </Button>
         {loading ? (
           "Loading"
         ) : (
@@ -93,4 +95,4 @@ const brand = () => {
   );
 };
 
-export default brand;
+export default Brand;

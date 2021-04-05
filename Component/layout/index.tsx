@@ -77,7 +77,7 @@ const Navbar = ({ children }) => {
         <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
           <div
             className='site-layout-background'
-            style={{ padding: 24, textAlign: "center" }}
+            style={{ padding: 24, textAlign: "right" }}
           >
             {children}
           </div>

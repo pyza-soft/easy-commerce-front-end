@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
+import React, { useState } from "react";
 import styles from "./style.module.css";
-import { Row, Col, Input, Checkbox, Button, Image } from "antd";
+import { Input, Checkbox, Button, Image } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { gql, useMutation } from "@apollo/client";
 
@@ -15,19 +16,23 @@ const TOKEN_AUTH = gql`
 const login = () => {
   const { register, handleSubmit } = useForm();
   const [tokenAuth, { data }] = useMutation(TOKEN_AUTH);
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
   console.log(data);
 
   const onSubmit = (data) => {
     alert(JSON.stringify(data));
     tokenAuth({
       variables: {
-        username: "shamee",
-        password: "sh123456",
+        username: userName,
+        password: password,
       },
     }).then((data) => {
       console.log(data);
     });
   };
+
+  console.log({ tokenAuth });
 
   return (
     <div className='d-flex justify-content-center flex-column'>
@@ -48,6 +53,9 @@ const login = () => {
             className='form-control'
             id='title'
             prefix={<UserOutlined />}
+            onChange={(e) => {
+              setUserName(e.target.value);
+            }}
           />
 
           <Input
@@ -57,6 +65,9 @@ const login = () => {
             id='password'
             placeholder='password'
             prefix={<LockOutlined />}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
 
           <div className='mt-2 mb-3'>
