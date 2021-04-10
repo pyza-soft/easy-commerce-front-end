@@ -1,0 +1,15 @@
+.buttonDesign {
+  display: flex;
+  align-items: center;
+}
+
+.columnDesign {
+  text-align: center;
+}
+
+.addButton {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  background-color: rgb(141, 179, 235);
+}

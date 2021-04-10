@@ -1,93 +1,137 @@
-import { Table, Tag, Space } from "antd";
+import React, { useEffect, useState } from "react";
+import { Table, Tag, Space, Button } from "antd";
 import dynamic from "next/dynamic";
+import styles from "./style.module.css";
 import Layout from "../../../Component/layout";
+import BrandAddModal from "../../../Component/Admin/Modal/BrandAddModal";
+import BrandUpdateModal from "../../../Component/Admin/Modal/BrandUpdateModal";
+import { useQuery, gql } from "@apollo/client";
+import { LOAD_BRAND } from "../../../GraphQL/queries";
+import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
-const LayoutComponent = dynamic(
-  () => import("../../../Component/layout/index")
-);
+const UPDATE_TODO = gql`
+  mutation UpdateTodo($id: String!, $type: String!) {
+    updateTodo(id: $id, type: $type) {
+      id
+      type
+    }
+  }
+`;
 
-const columns = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Tags",
-    key: "tags",
-    dataIndex: "tags",
-    render: (tags) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (text, record) => (
-      <Space size='middle'>
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
+type dataType = {
+  ID: number;
+  Name: string;
+  Description: string;
+};
 
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
+const Brand = () => {
+  const { error, loading, data } = useQuery(LOAD_BRAND);
+  const [brands, setBrands] = useState([]);
+  const [currentBrands, setCurrentBrands] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 
-const brand = () => {
+  useEffect(() => {
+    if (data) {
+      setBrands(data?.brands);
+    }
+  }, [data]);
+
+  const onEdit = (id: number) => {
+    console.log("YY", id);
+  };
+
+  const columns = [
+    {
+      title: "ID",
+      dataIndex: "ID",
+      key: "ID",
+    },
+    {
+      title: "Name",
+      dataIndex: "Name",
+      key: "Name",
+    },
+    {
+      title: "Description",
+      dataIndex: "Description",
+      key: "Description",
+    },
+    {
+      title: "Action",
+      key: "action",
+      className: "text-center",
+
+      render: (action: any, record: dataType) => (
+        <Space size='middle'>
+          <Button
+            icon={<EditOutlined />}
+            className={styles.buttonDesign}
+            onClick={() => {
+              setIsUpdateModalVisible(true);
+              onEdit(record.ID);
+            }}
+          >
+            Update
+          </Button>
+          <Button
+            icon={<DeleteOutlined />}
+            className={styles.buttonDesign}
+            danger
+            type='primary'
+          >
+            Delete
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
+  const value = brands.map((d: any, index: number) => ({
+    key: index,
+    ID: d?.id,
+    Name: d?.name,
+    Description: d?.description,
+  }));
+
+  columns;
   return (
-    // <LayoutComponent>
-    <Layout>
-      <Table columns={columns} dataSource={data} />
-    </Layout>
+    <React.Fragment>
+      <Layout>
+        <Button
+          icon={<PlusOutlined />}
+          onClick={() => {
+            setIsModalVisible(true);
+          }}
+          className={styles.addButton}
+        >
+          Add Brand
+        </Button>
+        {loading ? (
+          "Loading"
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={value}
+            pagination={{ pageSize: 5 }}
+          />
+        )}
+      </Layout>
+      <BrandAddModal
+        show={isModalVisible}
+        onHide={() => {
+          setIsModalVisible(false);
+        }}
+      />
 
-    // </LayoutComponent>
+      <BrandUpdateModal
+        show={isUpdateModalVisible}
+        onHide={() => {
+          setIsUpdateModalVisible(false);
+        }}
+      />
+    </React.Fragment>
   );
 };
 
-export default brand;
+export default Brand;

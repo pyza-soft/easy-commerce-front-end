@@ -2,8 +2,33 @@ import "../styles/globals.css";
 import "../styles/antd.less";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Head from "next/head";
-import { ApolloProvider } from "@apollo/client";
-  import { useApollo } from "../apollo-client";
+import {
+  ApolloProvider,
+  ApolloClient,
+  InMemoryCache,
+  HttpLink,
+  from,
+} from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
+import { useApollo } from "../apollo-client";
+
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.map(({ message, locations, path }) => {
+      alert(`Graphql error ${message}`);
+    });
+  }
+});
+
+const link = from([
+  errorLink,
+  new HttpLink({ uri: "http://localhost:8000/api/v1/" }),
+]);
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: link,
+});
 
 function MyApp({ Component, pageProps }) {
   const apolloClient = useApollo(pageProps.initialApolloState);
@@ -16,18 +41,6 @@ function MyApp({ Component, pageProps }) {
           crossOrigin='anonymous'
         />
         <link rel='stylesheet/less' type='text/css' href='styles.less' />
-        {/* <script
-          src='https://code.jquery.com/jquery-3.5.1.slim.min.js'
-          crossOrigin='anonymous'
-        /> */}
-        {/* <script
-          src='https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js'
-          crossOrigin='anonymous'
-        />
-        <script
-          src='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js'
-          crossOrigin='anonymous'
-        /> */}
       </Head>
       <Component {...pageProps} />
     </ApolloProvider>
