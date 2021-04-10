@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Tag, Space, Button } from "antd";
-import dynamic from "next/dynamic";
+
 import styles from "./style.module.css";
 import Layout from "../../../Component/Layout";
 import BrandAddModal from "../../../Component/Admin/Modal/BrandAddModal";
@@ -24,7 +24,7 @@ type dataType = {
   Description: string;
 };
 
-const Brand = () => {
+const Category = () => {
   const { error, loading, data } = useQuery(LOAD_BRAND);
   const [brands, setBrands] = useState([]);
   const [currentBrands, setCurrentBrands] = useState([]);
@@ -105,7 +105,7 @@ const Brand = () => {
           }}
           className={styles.addButton}
         >
-          Add Brand
+          Add Category
         </Button>
         {loading ? (
           "Loading"
@@ -134,4 +134,4 @@ const Brand = () => {
   );
 };
 
-export default Brand;
+export default Category;
