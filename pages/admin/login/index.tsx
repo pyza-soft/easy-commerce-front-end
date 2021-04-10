@@ -32,8 +32,6 @@ const login = () => {
     });
   };
 
-  console.log({ tokenAuth });
-
   return (
     <div className='d-flex justify-content-center flex-column'>
       <div className='d-flex justify-content-center flex-row mt-5'>

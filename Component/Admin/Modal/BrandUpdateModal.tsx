@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import { Modal, Button, Input } from "antd";
 import { useForm } from "react-hook-form";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { LOAD_BRAND } from "../../../GraphQL/queries";
 
-const CREATE_BRAND_MUTATION = gql`
-  mutation createBrand($name: String!, $description: String!) {
-    createBrand(name: $name, description: $description) {
+// const CREATE_BRAND_MUTATION = gql`
+//   mutation createBrand($name: String!, $description: String!) {
+//     createBrand(name: $name, description: $description) {
+//       brand {
+//         id
+//       }
+//     }
+//   }
+// `;
+
+const UPDATE_BRAND_MUTATION = gql`
+  mutation updateBrand($name: String!, $description: String!) {
+    updateBrand(name: $name, description: $description) {
       brand {
         id
       }
@@ -13,7 +24,7 @@ const CREATE_BRAND_MUTATION = gql`
   }
 `;
 
-const BrandAddModal = ({
+const BrandUpdateModal = ({
   show,
   onHide,
 }: {
@@ -21,23 +32,26 @@ const BrandAddModal = ({
   onHide: Function;
 }) => {
   const { handleSubmit } = useForm();
+
+  //   const { loading, error, data } = useQuery(GET_TODOS);
+  const { error, loading, data } = useQuery(LOAD_BRAND);
   const [name, setBrandName] = useState("");
   const [description, setDescription] = useState("");
-  const [createBrand, { data }] = useMutation(CREATE_BRAND_MUTATION);
+  const [updateBrand] = useMutation(UPDATE_BRAND_MUTATION);
 
-  const onSubmit = (data) => {
-    alert(JSON.stringify(data));
-    createBrand({
-      variables: {
-        name,
-        description,
-      },
-    }).then((data) => {
-      console.log(data);
-    });
+  //   const onSubmit = (data) => {
+  //     alert(JSON.stringify(data));
+  //     createBrand({
+  //       variables: {
+  //         name,
+  //         description,
+  //       },
+  //     }).then((data) => {
+  //       console.log(data);
+  //     });
 
-    onHide();
-  };
+  //     onHide();
+  //   };
 
   function closeModal() {
     onHide();
@@ -46,7 +60,7 @@ const BrandAddModal = ({
   return (
     <>
       <Modal
-        title='Add Brand Modal'
+        title='Update Brand Modal'
         visible={show}
         onOk={closeModal}
         onCancel={closeModal}
@@ -55,7 +69,10 @@ const BrandAddModal = ({
       >
         <div className='d-flex justify-content-center flex-column'>
           <div className='d-flex justify-content-center'>
-            <form onSubmit={handleSubmit(onSubmit)} className='login-warp mt-3'>
+            <form
+              // onSubmit={handleSubmit(onSubmit)}
+              className='login-warp mt-3'
+            >
               <Input
                 name='name'
                 type='text'
@@ -91,4 +108,4 @@ const BrandAddModal = ({
   );
 };
 
-export default BrandAddModal;
+export default BrandUpdateModal;

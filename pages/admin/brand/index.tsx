@@ -4,19 +4,42 @@ import dynamic from "next/dynamic";
 import styles from "./style.module.css";
 import Layout from "../../../Component/layout";
 import BrandAddModal from "../../../Component/Admin/Modal/BrandAddModal";
+import BrandUpdateModal from "../../../Component/Admin/Modal/BrandUpdateModal";
 import { useQuery, gql } from "@apollo/client";
 import { LOAD_BRAND } from "../../../GraphQL/queries";
+import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+
+const UPDATE_TODO = gql`
+  mutation UpdateTodo($id: String!, $type: String!) {
+    updateTodo(id: $id, type: $type) {
+      id
+      type
+    }
+  }
+`;
+
+type dataType = {
+  ID: number;
+  Name: string;
+  Description: string;
+};
 
 const Brand = () => {
   const { error, loading, data } = useQuery(LOAD_BRAND);
   const [brands, setBrands] = useState([]);
+  const [currentBrands, setCurrentBrands] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 
   useEffect(() => {
     if (data) {
       setBrands(data?.brands);
     }
   }, [data]);
+
+  const onEdit = (id: number) => {
+    console.log("YY", id);
+  };
 
   const columns = [
     {
@@ -38,17 +61,25 @@ const Brand = () => {
       title: "Action",
       key: "action",
       className: "text-center",
-      render: (text, record) => (
+
+      render: (action: any, record: dataType) => (
         <Space size='middle'>
-          {/* <Button
+          <Button
+            icon={<EditOutlined />}
             className={styles.buttonDesign}
-            type='primary'
-            onClick={() => setIsModalVisible(true)}
+            onClick={() => {
+              setIsUpdateModalVisible(true);
+              onEdit(record.ID);
+            }}
           >
-            Add
-          </Button> */}
-          <Button className={styles.buttonDesign}>Update</Button>
-          <Button className={styles.buttonDesign} danger type='primary'>
+            Update
+          </Button>
+          <Button
+            icon={<DeleteOutlined />}
+            className={styles.buttonDesign}
+            danger
+            type='primary'
+          >
             Delete
           </Button>
         </Space>
@@ -68,10 +99,11 @@ const Brand = () => {
     <React.Fragment>
       <Layout>
         <Button
+          icon={<PlusOutlined />}
           onClick={() => {
             setIsModalVisible(true);
           }}
-          className='mb-2'
+          className={styles.addButton}
         >
           Add Brand
         </Button>
@@ -89,6 +121,13 @@ const Brand = () => {
         show={isModalVisible}
         onHide={() => {
           setIsModalVisible(false);
+        }}
+      />
+
+      <BrandUpdateModal
+        show={isUpdateModalVisible}
+        onHide={() => {
+          setIsUpdateModalVisible(false);
         }}
       />
     </React.Fragment>
