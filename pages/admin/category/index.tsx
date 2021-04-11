@@ -3,37 +3,32 @@ import { Table, Tag, Space, Button } from "antd";
 
 import styles from "./style.module.css";
 import Layout from "../../../Component/Layout";
-import BrandAddModal from "../../../Component/Admin/Modal/BrandAddModal";
+import CategoryAddModal from "../../../Component/Admin/Modal/CategoryAddModal";
 import BrandUpdateModal from "../../../Component/Admin/Modal/BrandUpdateModal";
 import { useQuery, gql } from "@apollo/client";
-import { LOAD_BRAND } from "../../../GraphQL/queries";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
-const UPDATE_TODO = gql`
-  mutation UpdateTodo($id: String!, $type: String!) {
-    updateTodo(id: $id, type: $type) {
+export const LOAD_CATEGORY = gql`
+  query {
+    categories {
       id
-      type
+      name
+      description
+      image
     }
   }
 `;
 
-type dataType = {
-  ID: number;
-  Name: string;
-  Description: string;
-};
-
 const Category = () => {
-  const { error, loading, data } = useQuery(LOAD_BRAND);
-  const [brands, setBrands] = useState([]);
+  const { error, loading, data } = useQuery(LOAD_CATEGORY);
+  const [category, setCategory] = useState([]);
   const [currentBrands, setCurrentBrands] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 
   useEffect(() => {
     if (data) {
-      setBrands(data?.brands);
+      setCategory(data?.categories);
     }
   }, [data]);
 
@@ -43,33 +38,41 @@ const Category = () => {
 
   const columns = [
     {
-      title: "ID",
-      dataIndex: "ID",
-      key: "ID",
-    },
-    {
       title: "Name",
-      dataIndex: "Name",
-      key: "Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
       title: "Description",
-      dataIndex: "Description",
-      key: "Description",
+      dataIndex: "description",
+      key: "description",
     },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+
+      render: (text, record) => {
+        return (
+          <div>
+            <img src={record.image} />
+          </div>
+        );
+      },
+    },
+
     {
       title: "Action",
       key: "action",
       className: "text-center",
 
-      render: (action: any, record: dataType) => (
+      render: () => (
         <Space size='middle'>
           <Button
             icon={<EditOutlined />}
             className={styles.buttonDesign}
             onClick={() => {
               setIsUpdateModalVisible(true);
-              onEdit(record.ID);
             }}
           >
             Update
@@ -87,11 +90,12 @@ const Category = () => {
     },
   ];
 
-  const value = brands.map((d: any, index: number) => ({
+  const value = category.map((d: any, index: number) => ({
     key: index,
-    ID: d?.id,
-    Name: d?.name,
-    Description: d?.description,
+    id: d?.id,
+    name: d?.name,
+    description: d?.description,
+    image: d?.image,
   }));
 
   columns;
@@ -117,17 +121,10 @@ const Category = () => {
           />
         )}
       </Layout>
-      <BrandAddModal
+      <CategoryAddModal
         show={isModalVisible}
         onHide={() => {
           setIsModalVisible(false);
-        }}
-      />
-
-      <BrandUpdateModal
-        show={isUpdateModalVisible}
-        onHide={() => {
-          setIsUpdateModalVisible(false);
         }}
       />
     </React.Fragment>

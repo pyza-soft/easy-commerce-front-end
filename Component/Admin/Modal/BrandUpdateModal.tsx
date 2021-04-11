@@ -1,57 +1,55 @@
 import React, { useState } from "react";
-import { Modal, Button, Input } from "antd";
 import { useForm } from "react-hook-form";
-import { gql, useMutation, useQuery } from "@apollo/client";
-import { LOAD_BRAND } from "../../../GraphQL/queries";
-
-// const CREATE_BRAND_MUTATION = gql`
-//   mutation createBrand($name: String!, $description: String!) {
-//     createBrand(name: $name, description: $description) {
-//       brand {
-//         id
-//       }
-//     }
-//   }
-// `;
+import { gql, useMutation } from "@apollo/client";
+import { Modal, Form, Input, Button, message } from "antd";
 
 const UPDATE_BRAND_MUTATION = gql`
-  mutation updateBrand($name: String!, $description: String!) {
-    updateBrand(name: $name, description: $description) {
+  mutation updateBrand($brandId: Int!, $name: String!, $description: String!) {
+    updateBrand(brandId: $brandId, name: $name, description: $description) {
       brand {
         id
+        name
+        description
       }
     }
   }
 `;
 
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
+
 const BrandUpdateModal = ({
   show,
   onHide,
+  value,
+  onUpdateSuccess,
 }: {
   show: boolean;
   onHide: Function;
+  value: any;
+  onUpdateSuccess: any;
 }) => {
-  const { handleSubmit } = useForm();
-
-  //   const { loading, error, data } = useQuery(GET_TODOS);
-  const { error, loading, data } = useQuery(LOAD_BRAND);
-  const [name, setBrandName] = useState("");
-  const [description, setDescription] = useState("");
   const [updateBrand] = useMutation(UPDATE_BRAND_MUTATION);
 
-  //   const onSubmit = (data) => {
-  //     alert(JSON.stringify(data));
-  //     createBrand({
-  //       variables: {
-  //         name,
-  //         description,
-  //       },
-  //     }).then((data) => {
-  //       console.log(data);
-  //     });
-
-  //     onHide();
-  //   };
+  const onFinish = (values: any) => {
+    updateBrand({
+      variables: {
+        brandId: 123,
+        name: values.brandname,
+        description: values.description,
+      },
+    })
+      .then((data) => {
+        onUpdateSuccess(data.data.updateBrand.brand);
+      })
+      .catch(message.error("Update Failed!", 8000));
+  };
 
   function closeModal() {
     onHide();
@@ -69,38 +67,44 @@ const BrandUpdateModal = ({
       >
         <div className='d-flex justify-content-center flex-column'>
           <div className='d-flex justify-content-center'>
-            <form
-              // onSubmit={handleSubmit(onSubmit)}
-              className='login-warp mt-3'
+            <Form
+              {...layout}
+              name='basic'
+              initialValues={{
+                brandname: value.Name,
+                description: value.Description,
+              }}
+              onFinish={onFinish}
             >
-              <Input
-                name='name'
-                type='text'
-                placeholder='Brand Name'
-                className='form-control'
-                id='title'
-                onChange={(e) => {
-                  setBrandName(e.target.value);
-                }}
-              />
+              <Form.Item
+                label='Brand Name'
+                name='brandname'
+                rules={[
+                  { required: true, message: "Please input your brand name!" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
 
-              <Input
+              <Form.Item
+                label='Description'
                 name='description'
-                type='text'
-                className='form-control mt-2'
-                id='description'
-                placeholder='Brand Description'
-                onChange={(e) => {
-                  setDescription(e.target.value);
-                }}
-              />
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your brand description!",
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
 
-              <div className='d-flex justify-content-center pt-3'>
-                <Button htmlType='submit' className='pr-5 pl-5'>
+              <Form.Item {...tailLayout}>
+                <Button type='primary' htmlType='submit'>
                   Submit
                 </Button>
-              </div>
-            </form>
+              </Form.Item>
+            </Form>
           </div>
         </div>
       </Modal>
