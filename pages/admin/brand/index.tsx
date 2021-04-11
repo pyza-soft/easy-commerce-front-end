@@ -1,45 +1,44 @@
 import React, { useEffect, useState } from "react";
-import { Table, Tag, Space, Button } from "antd";
-import dynamic from "next/dynamic";
+import { Table, Tag, Space, Button, message } from "antd";
 import styles from "./style.module.css";
-import Layout from "../../../Component/layout";
+import Layout from "../../../Component/Layout";
 import BrandAddModal from "../../../Component/Admin/Modal/BrandAddModal";
 import BrandUpdateModal from "../../../Component/Admin/Modal/BrandUpdateModal";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql, useMutation } from "@apollo/client";
 import { LOAD_BRAND } from "../../../GraphQL/queries";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
-const UPDATE_TODO = gql`
-  mutation UpdateTodo($id: String!, $type: String!) {
-    updateTodo(id: $id, type: $type) {
-      id
-      type
+const DELETE_BRAND = gql`
+  mutation deleteBrand($brandId: Int!) {
+    deleteBrand(brandId: $brandId) {
+      brandId
     }
   }
 `;
 
-type dataType = {
-  ID: number;
-  Name: string;
-  Description: string;
-};
-
 const Brand = () => {
   const { error, loading, data } = useQuery(LOAD_BRAND);
+  const [deleteBrand] = useMutation(DELETE_BRAND);
   const [brands, setBrands] = useState([]);
-  const [currentBrands, setCurrentBrands] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [item, setItem] = useState([]);
+
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
 
   useEffect(() => {
     if (data) {
       setBrands(data?.brands);
+    } else {
+      if (error) message.error("No Data Found");
     }
   }, [data]);
 
-  const onEdit = (id: number) => {
-    console.log("YY", id);
-  };
+  const value = brands.map((d: any, index: number) => ({
+    key: index,
+    ID: d?.id,
+    Name: d?.name,
+    Description: d?.description,
+  }));
 
   const columns = [
     {
@@ -62,23 +61,29 @@ const Brand = () => {
       key: "action",
       className: "text-center",
 
-      render: (action: any, record: dataType) => (
+      render: (action: any, record: any) => (
         <Space size='middle'>
           <Button
             icon={<EditOutlined />}
             className={styles.buttonDesign}
             onClick={() => {
               setIsUpdateModalVisible(true);
-              onEdit(record.ID);
+              setItem(record);
             }}
           >
             Update
           </Button>
+
           <Button
             icon={<DeleteOutlined />}
             className={styles.buttonDesign}
             danger
             type='primary'
+            onClick={() =>
+              deleteBrand({
+                variables: { brandId: record.ID },
+              }).catch(() => message.error("Delete Failed!"))
+            }
           >
             Delete
           </Button>
@@ -86,13 +91,6 @@ const Brand = () => {
       ),
     },
   ];
-
-  const value = brands.map((d: any, index: number) => ({
-    key: index,
-    ID: d?.id,
-    Name: d?.name,
-    Description: d?.description,
-  }));
 
   columns;
   return (
@@ -123,13 +121,30 @@ const Brand = () => {
           setIsModalVisible(false);
         }}
       />
+      {item && (
+        <BrandUpdateModal
+          show={isUpdateModalVisible}
+          onUpdateSuccess={(values) => {
+            let temp = [...brands];
+            temp = temp.map((item: any) => {
+              if (parseInt(item.id) === parseInt(values.id)) {
+                return { ...values };
+              } else {
+                return item;
+              }
+            });
 
-      <BrandUpdateModal
-        show={isUpdateModalVisible}
-        onHide={() => {
-          setIsUpdateModalVisible(false);
-        }}
-      />
+            setBrands(temp);
+            setIsUpdateModalVisible(false);
+            setItem(null);
+          }}
+          value={item}
+          onHide={() => {
+            setIsUpdateModalVisible(false);
+            setItem(null);
+          }}
+        />
+      )}
     </React.Fragment>
   );
 };
