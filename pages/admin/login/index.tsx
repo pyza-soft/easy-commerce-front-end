@@ -4,6 +4,7 @@ import styles from "./style.module.css";
 import { Input, Checkbox, Button, Image } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { gql, useMutation } from "@apollo/client";
+import { useRouter } from "next/router";
 
 const TOKEN_AUTH = gql`
   mutation TokenAuth($username: String!, $password: String!) {
@@ -15,6 +16,7 @@ const TOKEN_AUTH = gql`
 
 const login = () => {
   const { register, handleSubmit } = useForm();
+  const router = useRouter();
   const [tokenAuth, { data }] = useMutation(TOKEN_AUTH);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -28,7 +30,7 @@ const login = () => {
         password: password,
       },
     }).then((data) => {
-      console.log(data);
+      router.push('/admin/brand');
     });
   };
 
