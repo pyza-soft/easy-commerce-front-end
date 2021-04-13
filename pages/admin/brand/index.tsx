@@ -112,7 +112,7 @@ const Brand = () => {
             "Loading"
           ) : (
             <Table
-              scroll={{ x: 1024 }} sticky
+              scroll={{ x: 1024 }}
               columns={columns}
               dataSource={value}
               pagination={{ pageSize: 5 }}

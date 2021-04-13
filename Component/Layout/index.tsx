@@ -37,7 +37,7 @@ const Navbar = ({ children }) => {
           height: "100vh",
           position: "fixed",
           left: 0,
-          zIndex: 999999,
+          zIndex: 2,
         }}
         collapsible
         // breakpoint="lg"
