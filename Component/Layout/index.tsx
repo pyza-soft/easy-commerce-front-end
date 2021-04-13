@@ -1,3 +1,4 @@
+import React from 'react';
 import Image from "next/image";
 import styles from "./style.module.css";
 import { useRouter } from "next/router";
@@ -12,7 +13,8 @@ import {
   UserOutlined,
   UploadOutlined,
   VideoCameraOutlined,
-  PropertySafetyFilled,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
 } from "@ant-design/icons";
 import { useState } from "react";
 
@@ -37,11 +39,11 @@ const Navbar = ({ children }) => {
           height: "100vh",
           position: "fixed",
           left: 0,
-          zIndex: 2,
+          zIndex: 3,
         }}
         collapsible
         // breakpoint="lg"
-        // collapsedWidth="0"
+        collapsedWidth="0"
         onBreakpoint={broken => {
           console.log(broken);
         }}
@@ -86,15 +88,24 @@ const Navbar = ({ children }) => {
           </Menu.Item>
         </Menu>
       </Sider>
-      <Layout className='site-layout' style={{ paddingLeft: 80}}>
-        <Header className={styles.sitebackground} style={{ padding: 0 }} />
-        <Content style={{ 
+      <Layout className='site-layout'
+        // style={{ paddingLeft: 80 }}
+      >
+        <Header className={styles.sitebackground} style={{ padding: 0 }}>
+          {React.createElement(sidebarCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+            className: 'trigger',
+            style: {
+              paddingLeft: !sidebarCollapsed ? 210 : 15,
+            },
+            onClick: () => onSidebarCollapsed(!sidebarCollapsed),
+          })}
+        </Header>
+        <Content style={{
           margin: "0 16px", overflow: "initial",
-          // paddingLeft: 80,
-         }}>
+        }}>
           <div
             className='site-layout-background'
-            style={{ padding: 24, textAlign: "right" }}
+            style={{ paddingTop: 15 }}
           >
             {children}
           </div>
