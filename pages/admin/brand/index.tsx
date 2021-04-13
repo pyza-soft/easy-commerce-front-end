@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Table, Tag, Space, Button, message } from "antd";
+import { ColumnsType } from 'antd/es/table';
 import styles from "./style.module.css";
 import Layout from "../../../Component/Layout";
 import BrandAddModal from "../../../Component/Admin/Modal/BrandAddModal";
@@ -40,53 +41,53 @@ const Brand = () => {
     Description: d?.description,
   }));
 
-  const columns = [
+  const columns: ColumnsType<any> = [
     {
       title: "ID",
       dataIndex: "ID",
       key: "ID",
+      width: 20,
     },
     {
       title: "Name",
       dataIndex: "Name",
       key: "Name",
+      width: 100,
     },
     {
       title: "Description",
       dataIndex: "Description",
       key: "Description",
+      width: 150,
     },
     {
       title: "Action",
       key: "action",
+      width: 40,
       className: "text-center",
-
+      fixed: 'right',
       render: (action: any, record: any) => (
         <Space size='middle'>
           <Button
             icon={<EditOutlined />}
-            className={styles.buttonDesign}
+            type='primary'
+            // className={styles.buttonDesign}
             onClick={() => {
               setIsUpdateModalVisible(true);
               setItem(record);
             }}
-          >
-            Update
-          </Button>
+          />
 
           <Button
             icon={<DeleteOutlined />}
-            className={styles.buttonDesign}
+            // className={styles.buttonDesign}
             danger
-            type='primary'
             onClick={() =>
               deleteBrand({
                 variables: { brandId: record.ID },
               }).catch(() => message.error("Delete Failed!"))
             }
-          >
-            Delete
-          </Button>
+          />
         </Space>
       ),
     },
@@ -94,26 +95,30 @@ const Brand = () => {
 
   columns;
   return (
-    <React.Fragment>
+    <>
       <Layout>
-        <Button
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setIsModalVisible(true);
-          }}
-          className={styles.addButton}
-        >
-          Add Brand
+        <div>
+          <Button
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setIsModalVisible(true);
+            }}
+            className={styles.addButton}
+            type="primary"
+          >
+            Add Brand
         </Button>
-        {loading ? (
-          "Loading"
-        ) : (
-          <Table
-            columns={columns}
-            dataSource={value}
-            pagination={{ pageSize: 5 }}
-          />
-        )}
+          {loading ? (
+            "Loading"
+          ) : (
+            <Table
+              scroll={{ x: 1024 }} sticky
+              columns={columns}
+              dataSource={value}
+              pagination={{ pageSize: 5 }}
+            />
+          )}
+        </div>
       </Layout>
       <BrandAddModal
         show={isModalVisible}
@@ -145,7 +150,7 @@ const Brand = () => {
           }}
         />
       )}
-    </React.Fragment>
+    </>
   );
 };
 

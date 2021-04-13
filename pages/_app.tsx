@@ -43,6 +43,21 @@ function MyApp({ Component, pageProps }) {
         <link rel='stylesheet/less' type='text/css' href='styles.less' />
       </Head>
       <Component {...pageProps} />
+      {/* <style global jsx>{`
+      html,
+      body,
+      body > div:first-child,
+      div#__next,
+      div#__next > div {
+        height: 100%;
+        background: blue;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+    `}</style> */}
     </ApolloProvider>
   );
 }

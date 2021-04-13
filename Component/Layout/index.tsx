@@ -14,6 +14,7 @@ import {
   VideoCameraOutlined,
   PropertySafetyFilled,
 } from "@ant-design/icons";
+import { useState } from "react";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -23,16 +24,29 @@ const Navbar = ({ children }) => {
   const handleClick = (url) => {
     router.push(url);
   };
+  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(true);
+  const onSidebarCollapsed = (collapsed: boolean) => {
+    setSidebarCollapsed(collapsed);
+  }
   return (
-    <Layout>
+    <Layout style={{ minHeight: '100vh' }}>
       <Sider
-        className='style-menu'
+        // className='style-menu'
         style={{
           overflow: "auto",
           height: "100vh",
           position: "fixed",
           left: 0,
+          zIndex: 999999,
         }}
+        collapsible
+        // breakpoint="lg"
+        // collapsedWidth="0"
+        onBreakpoint={broken => {
+          console.log(broken);
+        }}
+        onCollapse={onSidebarCollapsed}
+        collapsed={sidebarCollapsed}
       >
         <div className={styles.logo} />
 
@@ -72,9 +86,12 @@ const Navbar = ({ children }) => {
           </Menu.Item>
         </Menu>
       </Sider>
-      <Layout className='site-layout' style={{ marginLeft: 200 }}>
+      <Layout className='site-layout' style={{ paddingLeft: 80}}>
         <Header className={styles.sitebackground} style={{ padding: 0 }} />
-        <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
+        <Content style={{ 
+          margin: "0 16px", overflow: "initial",
+          // paddingLeft: 80,
+         }}>
           <div
             className='site-layout-background'
             style={{ padding: 24, textAlign: "right" }}
