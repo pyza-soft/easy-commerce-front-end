@@ -36,11 +36,11 @@ function MyApp({ Component, pageProps }) {
     <ApolloProvider client={apolloClient}>
       <Head>
         <link
-          rel='stylesheet'
-          href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css'
-          crossOrigin='anonymous'
+          rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          crossOrigin="anonymous"
         />
-        <link rel='stylesheet/less' type='text/css' href='styles.less' />
+        <link rel="stylesheet/less" type="text/css" href="styles.less" />
       </Head>
       <Component {...pageProps} />
       {/* <style global jsx>{`

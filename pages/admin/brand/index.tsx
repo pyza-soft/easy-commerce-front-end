@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Table, Tag, Space, Button, message } from "antd";
-import { ColumnsType } from 'antd/es/table';
+import { Table, Space, Button, message } from "antd";
+import { ColumnsType } from "antd/es/table";
 import styles from "./style.module.css";
 import Layout from "../../../Component/Layout";
 import BrandAddModal from "../../../Component/Admin/Modal/BrandAddModal";
@@ -10,9 +10,9 @@ import { LOAD_BRAND } from "../../../GraphQL/queries";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
 const DELETE_BRAND = gql`
-  mutation deleteBrand($brandId: Int!) {
-    deleteBrand(brandId: $brandId) {
-      brandId
+  mutation deleteBrand($id: Int!) {
+    deleteBrand(id: $id) {
+      success
     }
   }
 `;
@@ -65,12 +65,12 @@ const Brand = () => {
       key: "action",
       width: 40,
       className: "text-center",
-      fixed: 'right',
+      fixed: "right",
       render: (action: any, record: any) => (
-        <Space size='middle'>
+        <Space size="middle">
           <Button
             icon={<EditOutlined />}
-            type='primary'
+            type="primary"
             // className={styles.buttonDesign}
             onClick={() => {
               setIsUpdateModalVisible(true);
@@ -84,7 +84,7 @@ const Brand = () => {
             danger
             onClick={() =>
               deleteBrand({
-                variables: { brandId: record.ID },
+                variables: { id: record.ID },
               }).catch(() => message.error("Delete Failed!"))
             }
           />
@@ -107,7 +107,7 @@ const Brand = () => {
             type="primary"
           >
             Add Brand
-        </Button>
+          </Button>
           {loading ? (
             "Loading"
           ) : (
