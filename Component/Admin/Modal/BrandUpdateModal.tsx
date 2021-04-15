@@ -4,8 +4,8 @@ import { gql, useMutation } from "@apollo/client";
 import { Modal, Form, Input, Button, message } from "antd";
 
 const UPDATE_BRAND_MUTATION = gql`
-  mutation updateBrand($brandId: Int!, $name: String!, $description: String!) {
-    updateBrand(brandId: $brandId, name: $name, description: $description) {
+  mutation updateBrand($id: Int!, $name: String!, $description: String!) {
+    updateBrand(id: $id, name: $name, description: $description) {
       brand {
         id
         name
@@ -40,7 +40,7 @@ const BrandUpdateModal = ({
   const onFinish = (values: any) => {
     updateBrand({
       variables: {
-        brandId: 123,
+        id: 123,
         name: values.brandname,
         description: values.description,
       },
@@ -58,18 +58,18 @@ const BrandUpdateModal = ({
   return (
     <>
       <Modal
-        title='Update Brand Modal'
+        title="Update Brand Modal"
         visible={show}
         onOk={closeModal}
         onCancel={closeModal}
         keyboard={false}
         footer={null}
       >
-        <div className='d-flex justify-content-center flex-column'>
-          <div className='d-flex justify-content-center'>
+        <div className="d-flex justify-content-center flex-column">
+          <div className="d-flex justify-content-center">
             <Form
               {...layout}
-              name='basic'
+              name="basic"
               initialValues={{
                 brandname: value.Name,
                 description: value.Description,
@@ -77,8 +77,8 @@ const BrandUpdateModal = ({
               onFinish={onFinish}
             >
               <Form.Item
-                label='Brand Name'
-                name='brandname'
+                label="Brand Name"
+                name="brandname"
                 rules={[
                   { required: true, message: "Please input your brand name!" },
                 ]}
@@ -87,8 +87,8 @@ const BrandUpdateModal = ({
               </Form.Item>
 
               <Form.Item
-                label='Description'
-                name='description'
+                label="Description"
+                name="description"
                 rules={[
                   {
                     required: true,
@@ -100,7 +100,7 @@ const BrandUpdateModal = ({
               </Form.Item>
 
               <Form.Item {...tailLayout}>
-                <Button type='primary' htmlType='submit'>
+                <Button type="primary" htmlType="submit">
                   Submit
                 </Button>
               </Form.Item>

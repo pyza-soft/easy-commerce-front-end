@@ -10,8 +10,11 @@ const CREATE_CATEGORY_MUTATION = gql`
     $image: String!
   ) {
     createCategory(name: $name, description: $description, image: $image) {
-      categories {
+      category {
         id
+        name
+        description
+        image
       }
     }
   }
@@ -52,49 +55,49 @@ const CategoryAddModal = ({
   return (
     <>
       <Modal
-        title='Add Category Modal'
+        title="Add Category Modal"
         visible={show}
         onOk={closeModal}
         onCancel={closeModal}
         keyboard={false}
         footer={null}
       >
-        <div className='d-flex justify-content-center flex-column'>
-          <div className='d-flex justify-content-center'>
-            <form onSubmit={handleSubmit(onSubmit)} className='login-warp mt-3'>
+        <div className="d-flex justify-content-center flex-column">
+          <div className="d-flex justify-content-center">
+            <form onSubmit={handleSubmit(onSubmit)} className="login-warp mt-3">
               <Input
-                name='name'
-                type='text'
-                placeholder='Category Name'
-                className='form-control'
-                id='title'
+                name="name"
+                type="text"
+                placeholder="Category Name"
+                className="form-control"
+                id="title"
                 onChange={(e) => {
                   setCategoryName(e.target.value);
                 }}
               />
 
               <Input
-                name='description'
-                type='text'
-                className='form-control mt-2'
-                id='description'
-                placeholder='Category Description'
+                name="description"
+                type="text"
+                className="form-control mt-2"
+                id="description"
+                placeholder="Category Description"
                 onChange={(e) => {
                   setDescription(e.target.value);
                 }}
               />
 
               <Input
-                name='image'
-                type='file'
-                className='form-control mt-2'
-                id='image'
-                placeholder='Select Image'
+                name="image"
+                type="file"
+                className="form-control mt-2"
+                id="image"
+                placeholder="Select Image"
                 // onChange={(e) => setImage(e.target.files)}
               />
 
-              <div className='d-flex justify-content-center pt-3'>
-                <Button htmlType='submit' className='pr-5 pl-5'>
+              <div className="d-flex justify-content-center pt-3">
+                <Button htmlType="submit" className="pr-5 pl-5">
                   Submit
                 </Button>
               </div>
