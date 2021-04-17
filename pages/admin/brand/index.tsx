@@ -67,10 +67,10 @@ const Brand = () => {
       className: "text-center",
       fixed: "right",
       render: (action: any, record: any) => (
-        <Space size="middle">
+        <Space size='middle'>
           <Button
             icon={<EditOutlined />}
-            type="primary"
+            type='primary'
             // className={styles.buttonDesign}
             onClick={() => {
               setIsUpdateModalVisible(true);
@@ -82,12 +82,21 @@ const Brand = () => {
             icon={<DeleteOutlined />}
             // className={styles.buttonDesign}
             danger
-            onClick={() =>
+            type='primary'
+            onClick={() => {
               deleteBrand({
                 variables: { id: record.ID },
-              }).catch(() => message.error("Delete Failed!"))
-            }
-          />
+              }).catch(() => message.error("Delete Failed!"));
+
+              let filteredAry = brands.filter((e) => {
+                return e.id !== record.ID;
+              });
+
+              return setBrands(filteredAry);
+            }}
+          >
+            Delete
+          </Button>
         </Space>
       ),
     },
@@ -104,7 +113,7 @@ const Brand = () => {
               setIsModalVisible(true);
             }}
             className={styles.addButton}
-            type="primary"
+            type='primary'
           >
             Add Brand
           </Button>
@@ -124,6 +133,11 @@ const Brand = () => {
         show={isModalVisible}
         onHide={() => {
           setIsModalVisible(false);
+        }}
+        onCreateSuccess={(values) => {
+          let addtemp = [...brands, values];
+          setBrands(addtemp);
+          setIsUpdateModalVisible(false);
         }}
       />
       {item && (

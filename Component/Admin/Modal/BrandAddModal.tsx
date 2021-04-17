@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Input } from "antd";
+import { Form, Modal, Button, Input, message } from "antd";
 import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
 
@@ -8,33 +8,46 @@ const CREATE_BRAND_MUTATION = gql`
     createBrand(name: $name, description: $description) {
       brand {
         id
+        name
+        description
       }
     }
   }
 `;
 
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
+
 const BrandAddModal = ({
   show,
   onHide,
+  onCreateSuccess,
 }: {
   show: boolean;
   onHide: Function;
+  onCreateSuccess: any;
 }) => {
-  const { handleSubmit } = useForm();
   const [name, setBrandName] = useState("");
   const [description, setDescription] = useState("");
-  const [createBrand, { data }] = useMutation(CREATE_BRAND_MUTATION);
+  const [createBrand] = useMutation(CREATE_BRAND_MUTATION);
 
-  const onSubmit = (data) => {
-    alert(JSON.stringify(data));
+  const onFinishSubmit = () => {
     createBrand({
       variables: {
         name,
         description,
       },
-    }).then((data) => {
-      console.log(data);
-    });
+    })
+      .then((data) => {
+        onCreateSuccess(data.data.createBrand.brand);
+      })
+      .catch(() => message.error("Failed To Add Data!"));
 
     onHide();
   };
@@ -55,35 +68,49 @@ const BrandAddModal = ({
       >
         <div className='d-flex justify-content-center flex-column'>
           <div className='d-flex justify-content-center'>
-            <form onSubmit={handleSubmit(onSubmit)} className='login-warp mt-3'>
-              <Input
+            <Form
+              {...layout}
+              name='basic'
+              initialValues={{ remember: true }}
+              onFinish={onFinishSubmit}
+            >
+              <Form.Item
+                label='Name'
                 name='name'
-                type='text'
-                placeholder='Brand Name'
-                className='form-control'
-                id='title'
-                onChange={(e) => {
-                  setBrandName(e.target.value);
-                }}
-              />
+                rules={[
+                  { required: true, message: "Please input brand name!" },
+                ]}
+              >
+                <Input
+                  onChange={(e) => {
+                    setBrandName(e.target.value);
+                  }}
+                />
+              </Form.Item>
 
-              <Input
+              <Form.Item
+                label='Description'
                 name='description'
-                type='text'
-                className='form-control mt-2'
-                id='description'
-                placeholder='Brand Description'
-                onChange={(e) => {
-                  setDescription(e.target.value);
-                }}
-              />
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input brand description!",
+                  },
+                ]}
+              >
+                <Input
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                  }}
+                />
+              </Form.Item>
 
-              <div className='d-flex justify-content-center pt-3'>
-                <Button htmlType='submit' className='pr-5 pl-5'>
+              <Form.Item {...tailLayout}>
+                <Button type='primary' htmlType='submit'>
                   Submit
                 </Button>
-              </div>
-            </form>
+              </Form.Item>
+            </Form>
           </div>
         </div>
       </Modal>
