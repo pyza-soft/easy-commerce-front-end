@@ -69,10 +69,10 @@ const Navbar = ({ children }) => {
             Category
           </Menu.Item>
           <Menu.Item key='3' icon={<UploadOutlined />}>
-            Product List
+            Product
           </Menu.Item>
           <Menu.Item key='4' icon={<BarChartOutlined />}>
-            Order List
+            Order
           </Menu.Item>
           <Menu.Item key='5' icon={<CloudOutlined />}>
             nav 5
