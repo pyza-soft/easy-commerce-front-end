@@ -76,7 +76,9 @@ const Brand = () => {
               setIsUpdateModalVisible(true);
               setItem(record);
             }}
-          />
+          >
+            Update
+          </Button>
 
           <Button
             icon={<DeleteOutlined />}

@@ -34,7 +34,8 @@ const login = () => {
       },
     }).then((data) => {
       console.log({ tokenAuth: data });
-      localStorage.setItem("token", data?.data?.tokenAuth?.token);
+      if (data?.data?.tokenAuth?.user?.isSuperuser === true)
+        localStorage.setItem("token", data?.data?.tokenAuth?.token);
       router.push("/admin/brand");
     });
   };
