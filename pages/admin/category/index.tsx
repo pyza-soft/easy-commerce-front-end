@@ -4,7 +4,8 @@ import { Table, Tag, Space, Button, message } from "antd";
 import styles from "./style.module.css";
 import Layout from "../../../Component/Layout";
 import CategoryAddModal from "../../../Component/Admin/Modal/CategoryAddModal";
-import BrandUpdateModal from "../../../Component/Admin/Modal/BrandUpdateModal";
+import CategoryUpdateModal from "../../../Component/Admin/Modal/CategoryUpdateModal";
+
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
@@ -34,6 +35,7 @@ const Category = () => {
   const [currentBrands, setCurrentBrands] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
+  const [item, setItem] = useState([]);
 
   useEffect(() => {
     if (data) {
@@ -88,8 +90,10 @@ const Category = () => {
           <Button
             icon={<EditOutlined />}
             className={styles.buttonDesign}
+            type='primary'
             onClick={() => {
               setIsUpdateModalVisible(true);
+              setItem(record);
             }}
           >
             Update
@@ -154,17 +158,30 @@ const Category = () => {
         }}
       />
 
-      {/* <BrandAddModal
-        show={isModalVisible}
-        onHide={() => {
-          setIsModalVisible(false);
-        }}
-        onCreateSuccess={(values) => {
-          let addtemp = [...brands, values];
-          setBrands(addtemp);
-          setIsUpdateModalVisible(false);
-        }}
-      /> */}
+      {item && (
+        <CategoryUpdateModal
+          show={isUpdateModalVisible}
+          onUpdateSuccess={(values) => {
+            let temp = [...category];
+            temp = temp.map((item: any) => {
+              if (parseInt(item.id) === parseInt(values.id)) {
+                return { ...values };
+              } else {
+                return item;
+              }
+            });
+
+            setCategory(temp);
+            setIsUpdateModalVisible(false);
+            setItem(null);
+          }}
+          value={item}
+          onHide={() => {
+            setIsUpdateModalVisible(false);
+            setItem(null);
+          }}
+        />
+      )}
     </React.Fragment>
   );
 };
