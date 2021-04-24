@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Form, Modal, Button, Input, message } from "antd";
-import { useForm } from "react-hook-form";
 import { gql, useMutation } from "@apollo/client";
 
 const CREATE_BRAND_MUTATION = gql`

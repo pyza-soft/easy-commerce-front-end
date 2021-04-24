@@ -5,4 +5,15 @@
 }
 .sitebackground {
   background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buttonStyle {
+  border: none;
+  line-height: 2;
+  margin-right: 15px;
+  border-radius: 10px;
+  min-width: 100px;
 }

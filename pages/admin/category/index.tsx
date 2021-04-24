@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Table, Tag, Space, Button } from "antd";
+import { Table, Tag, Space, Button, message } from "antd";
 
 import styles from "./style.module.css";
 import Layout from "../../../Component/Layout";
 import CategoryAddModal from "../../../Component/Admin/Modal/CategoryAddModal";
 import BrandUpdateModal from "../../../Component/Admin/Modal/BrandUpdateModal";
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql, useMutation } from "@apollo/client";
 import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
 
 export const LOAD_CATEGORY = gql`
@@ -19,8 +19,17 @@ export const LOAD_CATEGORY = gql`
   }
 `;
 
+const DELETE_CATEGORY = gql`
+  mutation deleteCategory($id: Int!) {
+    deleteCategory(id: $id) {
+      success
+    }
+  }
+`;
+
 const Category = () => {
   const { error, loading, data } = useQuery(LOAD_CATEGORY);
+  const [deleteBrand] = useMutation(DELETE_CATEGORY);
   const [category, setCategory] = useState([]);
   const [currentBrands, setCurrentBrands] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -32,9 +41,17 @@ const Category = () => {
     }
   }, [data]);
 
-  const onEdit = (id: number) => {
-    console.log("YY", id);
+  const info = () => {
+    message.info("This is a normal message");
   };
+
+  const value = category.map((d: any, index: number) => ({
+    key: index,
+    id: d?.id,
+    name: d?.name,
+    description: d?.description,
+    image: d?.image,
+  }));
 
   const columns = [
     {
@@ -66,7 +83,7 @@ const Category = () => {
       key: "action",
       className: "text-center",
 
-      render: () => (
+      render: (action: any, record: any) => (
         <Space size='middle'>
           <Button
             icon={<EditOutlined />}
@@ -82,6 +99,17 @@ const Category = () => {
             className={styles.buttonDesign}
             danger
             type='primary'
+            onClick={() => {
+              deleteBrand({
+                variables: { id: record.id },
+              }).catch(() => message.error("Delete Failed!"));
+
+              let filteredAry = category.filter((e) => {
+                return e.id !== record.id;
+              });
+
+              return setCategory(filteredAry);
+            }}
           >
             Delete
           </Button>
@@ -89,14 +117,6 @@ const Category = () => {
       ),
     },
   ];
-
-  const value = category.map((d: any, index: number) => ({
-    key: index,
-    id: d?.id,
-    name: d?.name,
-    description: d?.description,
-    image: d?.image,
-  }));
 
   columns;
   return (
@@ -121,12 +141,30 @@ const Category = () => {
           />
         )}
       </Layout>
+
       <CategoryAddModal
         show={isModalVisible}
         onHide={() => {
           setIsModalVisible(false);
         }}
+        onCreateSuccess={(values) => {
+          let addtemp = [...category, values];
+          setCategory(addtemp);
+          setIsModalVisible(false);
+        }}
       />
+
+      {/* <BrandAddModal
+        show={isModalVisible}
+        onHide={() => {
+          setIsModalVisible(false);
+        }}
+        onCreateSuccess={(values) => {
+          let addtemp = [...brands, values];
+          setBrands(addtemp);
+          setIsUpdateModalVisible(false);
+        }}
+      /> */}
     </React.Fragment>
   );
 };

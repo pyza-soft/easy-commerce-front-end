@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Image from "next/image";
 import styles from "./style.module.css";
 import { useRouter } from "next/router";
@@ -29,9 +29,9 @@ const Navbar = ({ children }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(true);
   const onSidebarCollapsed = (collapsed: boolean) => {
     setSidebarCollapsed(collapsed);
-  }
+  };
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider
         // className='style-menu'
         style={{
@@ -43,8 +43,8 @@ const Navbar = ({ children }) => {
         }}
         collapsible
         // breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={broken => {
+        collapsedWidth='0'
+        onBreakpoint={(broken) => {
           console.log(broken);
         }}
         onCollapse={onSidebarCollapsed}
@@ -88,25 +88,41 @@ const Navbar = ({ children }) => {
           </Menu.Item>
         </Menu>
       </Sider>
-      <Layout className='site-layout'
+      <Layout
+        className='site-layout'
         // style={{ paddingLeft: 80 }}
       >
         <Header className={styles.sitebackground} style={{ padding: 0 }}>
-          {React.createElement(sidebarCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-            className: 'trigger',
-            style: {
-              paddingLeft: !sidebarCollapsed ? 210 : 15,
-            },
-            onClick: () => onSidebarCollapsed(!sidebarCollapsed),
-          })}
-        </Header>
-        <Content style={{
-          margin: "0 16px", overflow: "initial",
-        }}>
-          <div
-            className='site-layout-background'
-            style={{ paddingTop: 15 }}
+          {React.createElement(
+            sidebarCollapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+            {
+              className: "trigger",
+              style: {
+                paddingLeft: !sidebarCollapsed ? 210 : 15,
+              },
+              onClick: () => onSidebarCollapsed(!sidebarCollapsed),
+            }
+          )}
+
+          <button
+            className={styles.buttonStyle}
+            onClick={() => {
+              console.log("OOPP");
+
+              localStorage.removeItem("token");
+              router.push("/admin/login");
+            }}
           >
+            Logout
+          </button>
+        </Header>
+        <Content
+          style={{
+            margin: "0 16px",
+            overflow: "initial",
+          }}
+        >
+          <div className='site-layout-background' style={{ paddingTop: 15 }}>
             {children}
           </div>
         </Content>
